@@ -12,6 +12,7 @@ COPY handler.py /workspace/crestfall-comfy-worker/handler.py
 COPY local_comfy_worker.py /workspace/crestfall-comfy-worker/local_comfy_worker.py
 COPY workflow_registry.py /workspace/crestfall-comfy-worker/workflow_registry.py
 COPY start.sh /workspace/crestfall-comfy-worker/start.sh
+COPY rp_handler.py /workspace/crestfall-comfy-worker/rp_handler.py
 
 # Crestfall workflows only. Models stay on the RunPod volume.
 COPY workflows /workspace/crestfall-comfy-service-assets/workflows

@@ -104,4 +104,4 @@ fi
 
 echo "[crestfall-worker] starting RunPod handler"
 cd /workspace/crestfall-comfy-worker
-python3 handler.py
+python3 rp_handler.py

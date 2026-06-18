@@ -1,0 +1,229 @@
+{
+  "1": {
+    "inputs": {
+      "text": "worst quality, low quality, normal quality, blurry, messy, sketch, unfinished,\nbad anatomy, bad hands, extra fingers, extra limbs, deformed, mutated,\npoorly drawn face, poorly drawn eyes,\ntext, watermark, signature, logo,\nmultiple people, 2girls, 2boys, crowd, busy background,\nchild, loli, chibi,\nmessy, overpainted, muddy colors, noisy shading, rough sketch, unfinished, complex background, bad color balance",
+      "clip": [
+        "13",
+        1
+      ]
+    },
+    "class_type": "CLIPTextEncode",
+    "_meta": {
+      "title": "CLIP Text Encode (Prompt)"
+    }
+  },
+  "2": {
+    "inputs": {
+      "width": 1024,
+      "height": 1280,
+      "batch_size": 1
+    },
+    "class_type": "EmptyLatentImage",
+    "_meta": {
+      "title": "Empty Latent Image"
+    }
+  },
+  "3": {
+    "inputs": {
+      "pixels": [
+        "4",
+        0
+      ],
+      "vae": [
+        "16",
+        2
+      ]
+    },
+    "class_type": "VAEEncode",
+    "_meta": {
+      "title": "VAE Encode"
+    }
+  },
+  "4": {
+    "inputs": {
+      "samples": [
+        "5",
+        0
+      ],
+      "vae": [
+        "13",
+        2
+      ]
+    },
+    "class_type": "VAEDecode",
+    "_meta": {
+      "title": "VAE Decode"
+    }
+  },
+  "5": {
+    "inputs": {
+      "seed": 501294356549784,
+      "steps": 20,
+      "cfg": 8,
+      "sampler_name": "heunpp2",
+      "scheduler": "beta",
+      "denoise": 1,
+      "model": [
+        "13",
+        0
+      ],
+      "positive": [
+        "15",
+        0
+      ],
+      "negative": [
+        "1",
+        0
+      ],
+      "latent_image": [
+        "2",
+        0
+      ]
+    },
+    "class_type": "KSampler",
+    "_meta": {
+      "title": "KSampler"
+    }
+  },
+  "6": {
+    "inputs": {
+      "text": "3d render, digital painting, illustration, drawing, cartoon, anime, airbrushed, smooth skin, plastic, CGI, fake, video game graphic, artistic background",
+      "clip": [
+        "16",
+        1
+      ]
+    },
+    "class_type": "CLIPTextEncode",
+    "_meta": {
+      "title": "CLIP Text Encode (Prompt)"
+    }
+  },
+  "8": {
+    "inputs": {
+      "seed": 745140242147665,
+      "steps": 40,
+      "cfg": 5,
+      "sampler_name": "heunpp2",
+      "scheduler": "karras",
+      "denoise": 0.5,
+      "model": [
+        "16",
+        0
+      ],
+      "positive": [
+        "14",
+        0
+      ],
+      "negative": [
+        "6",
+        0
+      ],
+      "latent_image": [
+        "3",
+        0
+      ]
+    },
+    "class_type": "KSampler",
+    "_meta": {
+      "title": "KSampler"
+    }
+  },
+  "9": {
+    "inputs": {
+      "samples": [
+        "8",
+        0
+      ],
+      "vae": [
+        "16",
+        2
+      ]
+    },
+    "class_type": "VAEDecode",
+    "_meta": {
+      "title": "VAE Decode"
+    }
+  },
+  "10": {
+    "inputs": {
+      "model_name": "8x_NMKD-Superscale_150000_G.pth"
+    },
+    "class_type": "UpscaleModelLoader",
+    "_meta": {
+      "title": "Load Upscale Model"
+    }
+  },
+  "11": {
+    "inputs": {
+      "upscale_model": [
+        "10",
+        0
+      ],
+      "image": [
+        "9",
+        0
+      ]
+    },
+    "class_type": "ImageUpscaleWithModel",
+    "_meta": {
+      "title": "Upscale Image (using Model)"
+    }
+  },
+  "12": {
+    "inputs": {
+      "filename_prefix": "Crestfall",
+      "images": [
+        "11",
+        0
+      ]
+    },
+    "class_type": "SaveImage",
+    "_meta": {
+      "title": "Save Image"
+    }
+  },
+  "13": {
+    "inputs": {
+      "ckpt_name": "RealVisXL_V5.0_fp16.safetensors"
+    },
+    "class_type": "CheckpointLoaderSimple",
+    "_meta": {
+      "title": "Load Checkpoint"
+    }
+  },
+  "14": {
+    "inputs": {
+      "text": "masterpiece, best quality, high quality, clean anatomy, detailed face, detailed eyes, detailed hair,\n1girl, solo, adult woman, muscular female, anime illustration, polished anime character art,\nflowing hair, attractive mature woman, detailed face, detailed eyes, detailed hair, clean anatomy, smooth clean linework, soft polished shading, character-card artwork, pitch black hair, very long wavy hair, pale skin, black eyes, black lips, (96yottea:1.15), (cutesexyrobutts:0.8), (wlop:0.8), (goldencan:0.8), (miyazaki_hayao), (katsuhiro), (k-pop), (cian_yo:0.4), (melkor_mancin:1.1), limited_palette, (no_lineart), western_comics_style, (surreal:1.2), (james_o'barr:0.8), \n---\nscore_9, score_8_up, score_7_up, \npitch_black_hair, big hair, (wild hair), (floating hair), (athletic:1.2), (narrow_waist),(thick_thighs),(linea_alba), tsurime_eyes, mane, long_eyelashes, (ethereal fog), (cinematic fog), (cinematic shadows:1.4),  (cinematic darkness:1.4), \n(black lips),(firm glutes:1.1), puffy_lips,(dark_smokey_eyeshadow:1.1), thick_lips, (thin_eyebrows:0.8), (lateral buttocks depressions:0.1),(hip dips:0.1),(firm gluteal fold:0.1), (pale skin),\n---\nhigh contrast, stark lighting, negative space, masterpiece, highest quality,(ultra_high_contrast, color_contrast),(muted_color, pale_color),(flat_color:0.7),\n(cel_shading_2d), (detailed muscles), silhouette, (cinematic smoke:1.2), (watercolor),\n\n# WORLD EFFECTS\n(faded background),(shadowed background), smokey foreground, \n\n---\n# LIMBS\n(the main female character has shadowed limbs:1.4), (the main female character has shadowed legs), \n\n# CLOTHING \n(Opaque black clothing), (Opaque Matte-ventablack linen gown),(Shadowed gown),(soft-shadow edges),(smoke from bottom of the gown),(gown blends in with the shadows seamlessly),(he_has_shadowed_clothing),(all fabric is extremely dark:1),\n",
+      "clip": [
+        "16",
+        1
+      ]
+    },
+    "class_type": "CLIPTextEncode",
+    "_meta": {
+      "title": "CLIP Text Encode (Prompt)"
+    }
+  },
+  "15": {
+    "inputs": {
+      "text": "masterpiece, best quality, high quality, clean anatomy, detailed face, detailed eyes, detailed hair,\n1girl, solo, adult woman, muscular female, anime illustration, polished anime character art,\nflowing hair, attractive mature woman, detailed face, detailed eyes, detailed hair, clean anatomy, smooth clean linework, soft polished shading, character-card artwork, pitch black hair, very long wavy hair, pale skin, black eyes, black lips, (96yottea:1.15), (cutesexyrobutts:0.8), (wlop:0.8), (goldencan:0.8), (miyazaki_hayao), (katsuhiro), (k-pop), (cian_yo:0.4), (melkor_mancin:1.1), limited_palette, (no_lineart), western_comics_style, (surreal:1.2), (james_o'barr:0.8), \n---\nscore_9, score_8_up, score_7_up, \npitch_black_hair, big hair, (wild hair), (floating hair), (athletic:1.2), (narrow_waist),(thick_thighs),(linea_alba), tsurime_eyes, mane, long_eyelashes, (ethereal fog), (cinematic fog), (cinematic shadows:1.4),  (cinematic darkness:1.4), \n(black lips),(firm glutes:1.1), puffy_lips,(dark_smokey_eyeshadow:1.1), thick_lips, (thin_eyebrows:0.8), (lateral buttocks depressions:0.1),(hip dips:0.1),(firm gluteal fold:0.1), (pale skin),\n---\nhigh contrast, stark lighting, negative space, masterpiece, highest quality,(ultra_high_contrast, color_contrast),(muted_color, pale_color),(flat_color:0.7),\n(cel_shading_2d), (detailed muscles), silhouette, (cinematic smoke:1.2), (watercolor),\n\n# WORLD EFFECTS\n(faded background),(shadowed background), smokey foreground, \n\n---\n# LIMBS\n(the main female character has shadowed limbs:1.4), (the main female character has shadowed legs), \n\n# CLOTHING \n(Opaque black clothing), (Opaque Matte-ventablack linen gown),(Shadowed gown),(soft-shadow edges),(smoke from bottom of the gown),(gown blends in with the shadows seamlessly),(he_has_shadowed_clothing),(all fabric is extremely dark:1),\n",
+      "clip": [
+        "13",
+        1
+      ]
+    },
+    "class_type": "CLIPTextEncode",
+    "_meta": {
+      "title": "CLIP Text Encode (Prompt)"
+    }
+  },
+  "16": {
+    "inputs": {
+      "ckpt_name": "DreamShaper_8_pruned.safetensors"
+    },
+    "class_type": "CheckpointLoaderSimple",
+    "_meta": {
+      "title": "Load Checkpoint"
+    }
+  }
+}

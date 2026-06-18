@@ -1,0 +1,107 @@
+{
+  "2": {
+    "inputs": {
+      "ckpt_name": "ponyDiffusionV6XL_v6StartWithThisOne.safetensors"
+    },
+    "class_type": "CheckpointLoaderSimple",
+    "_meta": {
+      "title": "Load Checkpoint"
+    }
+  },
+  "3": {
+    "inputs": {
+      "text": "masterpiece, extreme quality, extreme detail, extreme quality, detailed adult face, detailed eyes, detailed hair, detailed muscles, muted color palette, pale low-saturation colors, flat cel-shaded coloring, clean 2D anime shading, polished anime rendering, clean cel shading, strong contrast, smooth linework, dynamic pose, attractive mature female, character card artwork 1girl, solo, adult mature woman, muscular female, above-average height, narrow waist, wide hips, thick thighs, detailed muscles, commanding presence, powerful demeanor, predatory bearing flowing hair, attractive mature woman, detailed face, detailed eyes, detailed hair, clean anatomy, smooth clean linework, soft polished shading, character-card artwork, pitch black hair, very long wavy hair, pale skin, black eyes, black lips, (96yottea:1.15), (cutesexyrobutts:0.8), (wlop:0.8), (goldencan:0.8), (miyazaki_hayao), (katsuhiro), (k-pop), (cian_yo:0.4), (melkor_mancin:1.1), limited_palette, (no_lineart), western_comics_style, (surreal:1.2), (james_o'barr:0.8), --- score_9, score_8_up, score_7_up, pitch_black_hair, big hair, (wild hair), (floating hair), (athletic:1.2), (narrow_waist),(thick_thighs),(linea_alba), tsurime_eyes, mane, long_eyelashes, (ethereal fog), (cinematic fog), (cinematic shadows:1.4), (cinematic darkness:1.4), (black lips),(firm glutes:1.1), puffy_lips,(dark_smokey_eyeshadow:1.1), thick_lips, (thin_eyebrows:0.8), (lateral buttocks depressions:0.1),(hip dips:0.1),(firm gluteal fold:0.1), (pale skin), --- high contrast, stark lighting, negative space, masterpiece, highest quality,(ultra_high_contrast, color_contrast),(muted_color, pale_color),(flat_color:0.7), (cel_shading_2d), (detailed muscles), silhouette, (cinematic smoke:1.2), (watercolor), # WORLD EFFECTS (faded background),(shadowed background), smokey foreground, --- # LIMBS (the main female character has shadowed limbs:1.4), (the main female character has shadowed legs), # CLOTHING (Opaque black clothing), (Opaque Matte-ventablack linen gown),(Shadowed gown),(soft-shadow edges),(smoke from bottom of the gown),(gown blends in with the shadows seamlessly),(he_has_shadowed_clothing),(all fabric is extremely dark:1),",
+      "clip": [
+        "2",
+        1
+      ]
+    },
+    "class_type": "CLIPTextEncode",
+    "_meta": {
+      "title": "CLIP Text Encode (Prompt)"
+    }
+  },
+  "4": {
+    "inputs": {
+      "text": "worst quality, low quality, normal quality, blurry, messy, sketch, unfinished,\nbad anatomy, bad hands, extra fingers, extra limbs, deformed, mutated,\npoorly drawn face, poorly drawn eyes,\ntext, watermark, signature, logo,\nmultiple people, 2girls, 2boys, crowd, busy background,\nchild, loli, chibi,\nmessy, overpainted, muddy colors, noisy shading, rough sketch, unfinished, complex background, bad color balance",
+      "clip": [
+        "2",
+        1
+      ]
+    },
+    "class_type": "CLIPTextEncode",
+    "_meta": {
+      "title": "CLIP Text Encode (Prompt)"
+    }
+  },
+  "5": {
+    "inputs": {
+      "width": 768,
+      "height": 1024,
+      "batch_size": 1
+    },
+    "class_type": "EmptyLatentImage",
+    "_meta": {
+      "title": "Empty Latent Image"
+    }
+  },
+  "6": {
+    "inputs": {
+      "seed": 251604498540302,
+      "steps": 36,
+      "cfg": 8,
+      "sampler_name": "heunpp2",
+      "scheduler": "beta",
+      "denoise": 1,
+      "model": [
+        "2",
+        0
+      ],
+      "positive": [
+        "3",
+        0
+      ],
+      "negative": [
+        "4",
+        0
+      ],
+      "latent_image": [
+        "5",
+        0
+      ]
+    },
+    "class_type": "KSampler",
+    "_meta": {
+      "title": "KSampler"
+    }
+  },
+  "7": {
+    "inputs": {
+      "samples": [
+        "6",
+        0
+      ],
+      "vae": [
+        "2",
+        2
+      ]
+    },
+    "class_type": "VAEDecode",
+    "_meta": {
+      "title": "VAE Decode"
+    }
+  },
+  "8": {
+    "inputs": {
+      "filename_prefix": "Crestfall",
+      "images": [
+        "7",
+        0
+      ]
+    },
+    "class_type": "SaveImage",
+    "_meta": {
+      "title": "Save Image"
+    }
+  }
+}

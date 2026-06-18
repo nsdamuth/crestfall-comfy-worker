@@ -1,0 +1,164 @@
+{
+  "1": {
+    "inputs": {
+      "width": 768,
+      "height": 1024,
+      "batch_size": 1
+    },
+    "class_type": "EmptyLatentImage",
+    "_meta": {
+      "title": "Empty Latent Image"
+    }
+  },
+  "2": {
+    "inputs": {
+      "text": "worst quality, low quality, normal quality, blurry, messy, sketch, unfinished,\nbad anatomy, bad hands, extra fingers, extra limbs, deformed, mutated,\npoorly drawn face, poorly drawn eyes,\ntext, watermark, signature, logo,\nmultiple people, 2girls, 2boys, crowd, busy background,\nchild, loli, chibi,\nmessy, overpainted, muddy colors, noisy shading, rough sketch, unfinished, complex background, bad color balance",
+      "clip": [
+        "5",
+        1
+      ]
+    },
+    "class_type": "CLIPTextEncode",
+    "_meta": {
+      "title": "CLIP Text Encode (Prompt)"
+    }
+  },
+  "3": {
+    "inputs": {
+      "filename_prefix": "Crestfall",
+      "images": [
+        "7",
+        0
+      ]
+    },
+    "class_type": "SaveImage",
+    "_meta": {
+      "title": "Save Image"
+    }
+  },
+  "4": {
+    "inputs": {
+      "text": "masterpiece, best quality, high quality, clean anatomy, detailed face, detailed eyes, detailed hair,\n1girl, solo, muscular adult woman, muscular female bodybuilder, anime illustration, polished anime character art,\nflowing hair, attractive mature woman, detailed face, detailed eyes, detailed hair, clean anatomy, smooth clean linework, soft polished shading, character-card artwork, pitch black hair, very long wavy hair, pale skin, black eyes, black lips, (96yottea:1.15), (cutesexyrobutts:0.8), (wlop:0.8), (goldencan:0.8), (miyazaki_hayao), (katsuhiro), (k-pop), (cian_yo:0.4), (melkor_mancin:1.1), limited_palette, (no_lineart), western_comics_style, (surreal:1.2), (james_o'barr:0.8), \n---\nscore_9, score_8_up, score_7_up, \npitch_black_hair, big hair, (wild hair), (floating hair), (athletic:1.2), (narrow_waist),(thick_thighs),(linea_alba), tsurime_eyes, mane, long_eyelashes, (ethereal fog), (cinematic fog), (cinematic shadows:1.4),  (cinematic darkness:1.4), \n(black lips),(firm glutes:1.1), puffy_lips,(dark_smokey_eyeshadow:1.1), thick_lips, (thin_eyebrows:0.8), (lateral buttocks depressions:0.1),(hip dips:0.1),(firm gluteal fold:0.1), (pale skin),\n---\nhigh contrast, stark lighting, negative space, masterpiece, highest quality,(ultra_high_contrast, color_contrast),(muted_color, pale_color),(flat_color:0.7),\n(cel_shading_2d), (detailed muscles), silhouette, (cinematic smoke:1.2), (watercolor),\n\n# WORLD EFFECTS\n(faded background),(shadowed background), smokey foreground, \n\n---\n# LIMBS\n(the main female character has shadowed limbs:1.4), (the main female character has shadowed legs), \n\n# CLOTHING \n(Opaque black clothing), (Opaque Matte-ventablack linen gown),(Shadowed gown),(soft-shadow edges),(smoke from bottom of the gown),(gown blends in with the shadows seamlessly),(he_has_shadowed_clothing),(all fabric is extremely dark:1),\n",
+      "clip": [
+        "5",
+        1
+      ]
+    },
+    "class_type": "CLIPTextEncode",
+    "_meta": {
+      "title": "CLIP Text Encode (Prompt)"
+    }
+  },
+  "5": {
+    "inputs": {
+      "ckpt_name": "RealVisXL_V5.0_fp16.safetensors"
+    },
+    "class_type": "CheckpointLoaderSimple",
+    "_meta": {
+      "title": "Load Checkpoint"
+    }
+  },
+  "6": {
+    "inputs": {
+      "seed": 245743484696212,
+      "steps": 36,
+      "cfg": 8,
+      "sampler_name": "heunpp2",
+      "scheduler": "beta",
+      "denoise": 1,
+      "model": [
+        "11",
+        0
+      ],
+      "positive": [
+        "4",
+        0
+      ],
+      "negative": [
+        "2",
+        0
+      ],
+      "latent_image": [
+        "1",
+        0
+      ]
+    },
+    "class_type": "KSampler",
+    "_meta": {
+      "title": "KSampler"
+    }
+  },
+  "7": {
+    "inputs": {
+      "samples": [
+        "6",
+        0
+      ],
+      "vae": [
+        "5",
+        2
+      ]
+    },
+    "class_type": "VAEDecode",
+    "_meta": {
+      "title": "VAE Decode"
+    }
+  },
+  "8": {
+    "inputs": {
+      "image": "Crestfall_00008_.png"
+    },
+    "class_type": "LoadImage",
+    "_meta": {
+      "title": "Load Image"
+    }
+  },
+  "9": {
+    "inputs": {
+      "ipadapter_file": "ip-adapter_sd15.safetensors"
+    },
+    "class_type": "IPAdapterModelLoader",
+    "_meta": {
+      "title": "IPAdapter Model Loader"
+    }
+  },
+  "10": {
+    "inputs": {
+      "clip_name": "CLIP-ViT-H-14-laion2B-s32B-b79K.safetensors"
+    },
+    "class_type": "CLIPVisionLoader",
+    "_meta": {
+      "title": "Load CLIP Vision"
+    }
+  },
+  "11": {
+    "inputs": {
+      "weight": 0.15,
+      "weight_type": "ease out",
+      "combine_embeds": "average",
+      "start_at": 0,
+      "end_at": 0.5,
+      "embeds_scaling": "V only",
+      "model": [
+        "5",
+        0
+      ],
+      "ipadapter": [
+        "9",
+        0
+      ],
+      "image": [
+        "8",
+        0
+      ],
+      "clip_vision": [
+        "10",
+        0
+      ]
+    },
+    "class_type": "IPAdapterAdvanced",
+    "_meta": {
+      "title": "IPAdapter Advanced"
+    }
+  }
+}

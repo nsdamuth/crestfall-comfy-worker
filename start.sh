@@ -3,6 +3,8 @@ set -euo pipefail
 
 echo "[crestfall-worker] starting"
 
+export COMFY_DIR="${COMFY_DIR:-/ComfyUI}"
+export COMFY_MODEL_SOURCE_DIR="${COMFY_MODEL_SOURCE_DIR:-/runpod-volume/runpod-slim/ComfyUI/models}"
 export COMFY_BASE_URL="${COMFY_BASE_URL:-http://127.0.0.1:8188}"
 export CRESTFALL_ASSETS="${CRESTFALL_ASSETS:-/workspace/crestfall-comfy-service-assets}"
 export CRESTFALL_WORKER_TMP_DIR="${CRESTFALL_WORKER_TMP_DIR:-/tmp/crestfall-comfy-worker}"
@@ -44,6 +46,37 @@ mkdir -p "$TEST_OUTPUT_DIR"
 mkdir -p "$COMFY_DIR/input"
 mkdir -p "$COMFY_DIR/output"
 
+echo "[crestfall-worker] linking model directories"
+echo "[crestfall-worker] COMFY_MODEL_SOURCE_DIR=$COMFY_MODEL_SOURCE_DIR"
+
+if [ ! -d "$COMFY_MODEL_SOURCE_DIR" ]; then
+  echo "[crestfall-worker] MISSING MODEL SOURCE DIR: $COMFY_MODEL_SOURCE_DIR"
+  exit 1
+fi
+
+mkdir -p "$COMFY_DIR/models"
+
+link_model_dir() {
+  NAME="$1"
+  SOURCE="$COMFY_MODEL_SOURCE_DIR/$NAME"
+  TARGET="$COMFY_DIR/models/$NAME"
+
+  if [ ! -d "$SOURCE" ]; then
+    echo "[crestfall-worker] MISSING MODEL DIR: $SOURCE"
+    exit 1
+  fi
+
+  rm -rf "$TARGET"
+  ln -s "$SOURCE" "$TARGET"
+
+  echo "[crestfall-worker] linked $TARGET -> $SOURCE"
+}
+
+link_model_dir "checkpoints"
+link_model_dir "ipadapter"
+link_model_dir "clip_vision"
+link_model_dir "upscale_models"
+
 echo "[crestfall-worker] checking workflow assets"
 find "$CRESTFALL_ASSETS/workflows" -type f -name "*.json" | sort
 
@@ -75,7 +108,12 @@ find "$COMFY_DIR/output" -type f -name "crestfall_*" -mmin +120 -delete || true
 
 echo "[crestfall-worker] launching ComfyUI"
 cd "$COMFY_DIR"
-python3 -u main.py --listen 127.0.0.1 --port 8188 > /tmp/crestfall-comfyui.log 2>&1 &
+python3 -u main.py \
+  --listen 127.0.0.1 \
+  --port 8188 \
+  --user-directory "$CRESTFALL_WORKER_TMP_DIR/comfy-user" \
+  --database-url "sqlite:///$CRESTFALL_WORKER_TMP_DIR/comfyui.db" \
+  > /tmp/crestfall-comfyui.log 2>&1 &
 
 COMFY_PID=$!
 

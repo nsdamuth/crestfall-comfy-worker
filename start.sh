@@ -75,13 +75,13 @@ find "$COMFY_DIR/output" -type f -name "crestfall_*" -mmin +120 -delete || true
 
 echo "[crestfall-worker] launching ComfyUI"
 cd "$COMFY_DIR"
-python3 main.py --listen 127.0.0.1 --port 8188 > /tmp/crestfall-comfyui.log 2>&1 &
+python3 -u main.py --listen 127.0.0.1 --port 8188 > /tmp/crestfall-comfyui.log 2>&1 &
 
 COMFY_PID=$!
 
 echo "[crestfall-worker] waiting for ComfyUI, pid=$COMFY_PID"
 
-for i in $(seq 1 120); do
+for i in $(seq 1 180); do
   if curl -fsS "$COMFY_BASE_URL/system_stats" >/dev/null 2>&1; then
     echo "[crestfall-worker] ComfyUI is ready"
     break
@@ -93,8 +93,21 @@ for i in $(seq 1 120); do
     exit 1
   fi
 
+  if [ "$((i % 10))" -eq 0 ]; then
+    echo "[crestfall-worker] still waiting for ComfyUI after $((i * 2)) seconds"
+    echo "[crestfall-worker] recent ComfyUI log:"
+    tail -n 80 /tmp/crestfall-comfyui.log || true
+  fi
+
   sleep 2
 done
+
+if ! curl -fsS "$COMFY_BASE_URL/system_stats" >/dev/null 2>&1; then
+  echo "[crestfall-worker] ComfyUI did not become ready"
+  echo "[crestfall-worker] final ComfyUI log:"
+  cat /tmp/crestfall-comfyui.log || true
+  exit 1
+fi
 
 if ! curl -fsS "$COMFY_BASE_URL/system_stats" >/dev/null 2>&1; then
   echo "[crestfall-worker] ComfyUI did not become ready"

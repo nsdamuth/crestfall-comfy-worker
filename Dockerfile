@@ -24,4 +24,4 @@ RUN if [ ! -d "/ComfyUI/custom_nodes/comfyui_ipadapter_plus" ] && [ -d "/ComfyUI
 
 RUN chmod +x /workspace/crestfall-comfy-worker/start.sh
 
-CMD ["/workspace/crestfall-comfy-worker/start.sh"]
+CMD ["/bin/bash", "-lc", "echo '[debug] container started'; env | sort; echo '[debug] /workspace'; ls -la /workspace || true; echo '[debug] /runpod-volume'; ls -la /runpod-volume || true; echo '[debug] comfy'; ls -la /runpod-volume/runpod-slim/ComfyUI || true; sleep 600"]

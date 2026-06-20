@@ -11,6 +11,7 @@ RUN python3 -m pip install --no-cache-dir -r /workspace/crestfall-comfy-worker/r
 COPY handler.py /workspace/crestfall-comfy-worker/handler.py
 COPY local_comfy_worker.py /workspace/crestfall-comfy-worker/local_comfy_worker.py
 COPY workflow_registry.py /workspace/crestfall-comfy-worker/workflow_registry.py
+COPY model_sync.py /workspace/crestfall-comfy-worker/model_sync.py
 COPY start.sh /workspace/crestfall-comfy-worker/start.sh
 COPY rp_handler.py /workspace/crestfall-comfy-worker/rp_handler.py
 

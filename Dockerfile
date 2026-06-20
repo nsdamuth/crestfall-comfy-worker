@@ -2,26 +2,21 @@ FROM runpod/worker-comfyui:5.8.6-base
 
 USER root
 
-ARG COMFYUI_COMMIT=a4fa18e8999bdae888f8e88cd872fae48298ece6
-
 RUN command -v git >/dev/null 2>&1 || \
     (apt-get update && apt-get install -y git && rm -rf /var/lib/apt/lists/*)
 
-# Force a known-good ComfyUI source tree.
-# Do not trust whatever partial /ComfyUI may exist in the base image.
+# Force a complete public ComfyUI source tree.
+# The previous working-pod commit was not checkout-able from public ComfyUI,
+# so do not pin that hash here.
 RUN rm -rf /ComfyUI && \
-    git clone https://github.com/comfyanonymous/ComfyUI.git /ComfyUI && \
-    cd /ComfyUI && \
-    git checkout ${COMFYUI_COMMIT} && \
+    git clone --depth 1 https://github.com/comfyanonymous/ComfyUI.git /ComfyUI && \
     test -f /ComfyUI/main.py && \
     test -f /ComfyUI/comfy/sd.py && \
     test -f /ComfyUI/comfy/ldm/models/autoencoder.py
 
-# The base image already has most of the heavy CUDA/Torch stack.
-# Install Comfy's Python requirements without replacing the whole environment manually.
 RUN python3 -m pip install --no-cache-dir -r /ComfyUI/requirements.txt
 
-# Required custom nodes for our exported workflows.
+# Required custom nodes for the exported workflows.
 RUN mkdir -p /ComfyUI/custom_nodes && \
     git clone --depth 1 https://github.com/cubiq/ComfyUI_IPAdapter_plus.git /ComfyUI/custom_nodes/comfyui_ipadapter_plus && \
     if [ -f "/ComfyUI/custom_nodes/comfyui_ipadapter_plus/requirements.txt" ]; then \
@@ -49,6 +44,7 @@ COPY rp_handler.py /workspace/crestfall-comfy-worker/rp_handler.py
 COPY workflows /workspace/crestfall-comfy-service-assets/workflows
 
 RUN test -f /ComfyUI/main.py && \
+    test -f /ComfyUI/comfy/sd.py && \
     test -f /ComfyUI/comfy/ldm/models/autoencoder.py && \
     chmod +x /workspace/crestfall-comfy-worker/start.sh
 

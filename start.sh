@@ -201,6 +201,14 @@ echo "[crestfall-worker] cleanup stale temp files"
 find "$COMFY_DIR/input" -maxdepth 1 -type f -name "crestfall_ref_*" -mmin +120 -delete || true
 find "$COMFY_DIR/output" -type f -name "crestfall_*" -mmin +120 -delete || true
 
+echo "[crestfall-worker] preparing Comfy runtime directories"
+
+mkdir -p "$CRESTFALL_WORKER_TMP_DIR/comfy-user"
+mkdir -p "$TEST_OUTPUT_DIR"
+mkdir -p "$COMFY_DIR/input"
+mkdir -p "$COMFY_DIR/output"
+mkdir -p "$COMFY_DIR/temp"
+
 echo "[crestfall-worker] launching ComfyUI"
 
 cd "$COMFY_DIR"

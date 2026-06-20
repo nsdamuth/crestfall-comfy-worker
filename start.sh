@@ -15,18 +15,38 @@ trap 'on_error $LINENO' ERR
 
 echo "[crestfall-worker] starting"
 
-export COMFY_SOURCE_DIR="${COMFY_SOURCE_DIR:-/runpod-volume/runpod-slim/ComfyUI}"
-export COMFY_MODEL_SOURCE_DIR="${COMFY_MODEL_SOURCE_DIR:-/runpod-volume/runpod-slim/ComfyUI/models}"
+export MODEL_SOURCE_MODE="${MODEL_SOURCE_MODE:-r2}"
+export MODEL_LOCAL_DIR="${MODEL_LOCAL_DIR:-/workspace/crestfall-comfy-models}"
+
+export COMFY_SOURCE_DIR="${COMFY_SOURCE_DIR:-/ComfyUI}"
+export COMFY_MODEL_SOURCE_DIR="${COMFY_MODEL_SOURCE_DIR:-$MODEL_LOCAL_DIR}"
+
 export COMFY_DIR="${COMFY_DIR:-/tmp/crestfall-comfy-runtime/ComfyUI}"
 export COMFY_BASE_URL="${COMFY_BASE_URL:-http://127.0.0.1:8188}"
 export CRESTFALL_ASSETS="${CRESTFALL_ASSETS:-/workspace/crestfall-comfy-service-assets}"
 export CRESTFALL_WORKER_TMP_DIR="${CRESTFALL_WORKER_TMP_DIR:-/tmp/crestfall-comfy-worker}"
 export TEST_OUTPUT_DIR="${TEST_OUTPUT_DIR:-/tmp/crestfall-comfy-worker/test_outputs}"
 
+
 echo "[crestfall-worker] COMFY_SOURCE_DIR=$COMFY_SOURCE_DIR"
 echo "[crestfall-worker] COMFY_MODEL_SOURCE_DIR=$COMFY_MODEL_SOURCE_DIR"
 echo "[crestfall-worker] COMFY_DIR=$COMFY_DIR"
 echo "[crestfall-worker] CRESTFALL_ASSETS=$CRESTFALL_ASSETS"
+echo "[crestfall-worker] MODEL_SOURCE_MODE=$MODEL_SOURCE_MODE"
+echo "[crestfall-worker] MODEL_LOCAL_DIR=$MODEL_LOCAL_DIR"
+
+case "$COMFY_DIR" in
+  /runpod-volume/*|/workspace/runpod-slim/*)
+    echo "[crestfall-worker] REFUSING to use mounted volume as writable COMFY_DIR: $COMFY_DIR"
+    exit 1
+    ;;
+esac
+
+if [ "$MODEL_SOURCE_MODE" = "r2" ]; then
+  echo "[crestfall-worker] syncing models from R2"
+  python3 /workspace/crestfall-comfy-worker/model_sync.py
+  export COMFY_MODEL_SOURCE_DIR="$MODEL_LOCAL_DIR"
+fi
 
 if [ ! -f "$COMFY_SOURCE_DIR/main.py" ]; then
   echo "[crestfall-worker] MISSING COMFY SOURCE: $COMFY_SOURCE_DIR/main.py"
@@ -132,7 +152,12 @@ link_model_dir() {
     echo "[crestfall-worker] REFUSING self-link: SOURCE and TARGET are the same path: $SOURCE"
     exit 1
   fi
-
+  case "$TARGET" in
+    /runpod-volume/*|/workspace/runpod-slim/*)
+      echo "[crestfall-worker] REFUSING to write model link inside mounted volume: $TARGET"
+      exit 1
+      ;;
+  esac
   rm -rf "$TARGET"
   ln -s "$SOURCE" "$TARGET"
 
